@@ -24,6 +24,8 @@ public class Issue {
     private Estado estado;
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    private Departamento departamento;
     private String epicos;
     private String sprint;
     private String proyecto;

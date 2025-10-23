@@ -1,10 +1,7 @@
 package com.jei.applicacion.mapper.impl;
 
 import com.jei.applicacion.mapper.IssueMapper;
-import com.jei.dominio.entidad.Estado;
-import com.jei.dominio.entidad.Issue;
-import com.jei.dominio.entidad.Prioridad;
-import com.jei.dominio.entidad.Tipo;
+import com.jei.dominio.entidad.*;
 import com.jei.web.dto.IssueRequestDto;
 import com.jei.web.dto.IssueResponseDto;
 import org.springframework.stereotype.Component;
@@ -19,6 +16,7 @@ public class IssueMapperImpl implements IssueMapper {
                 .prioridad(Prioridad.valueOf(issueRequestDto.getPrioridad()))
                 .estado(Estado.valueOf(issueRequestDto.getEstado()))
                 .tipo(Tipo.valueOf(issueRequestDto.getTipo()))
+                .departamento(Departamento.valueOf(issueRequestDto.getDepartamento()))
                 .epicos(issueRequestDto.getEpicos())
                 .sprint(issueRequestDto.getSprint())
                 .proyecto(issueRequestDto.getProyecto())
@@ -35,6 +33,7 @@ public class IssueMapperImpl implements IssueMapper {
                 .prioridad(issue.getPrioridad().name())
                 .estado(issue.getEstado().name())
                 .tipo(issue.getTipo().name())
+                .departamento(issue.getDepartamento().name())
                 .epicos(issue.getEpicos())
                 .sprint(issue.getSprint())
                 .proyecto(issue.getProyecto())

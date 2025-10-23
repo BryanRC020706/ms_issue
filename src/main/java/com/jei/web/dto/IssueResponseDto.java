@@ -16,6 +16,7 @@ public class IssueResponseDto {
     private String usuario;
     private String prioridad;
     private String estado;
+    private String departamento;
     private String tipo;
     private String epicos;
     private String sprint;

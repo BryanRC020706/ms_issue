@@ -17,6 +17,7 @@ public class IssueRequestDto {
     private String prioridad;
     private String estado;
     private String tipo;
+    private String departamento;
     private String epicos;
     private String sprint;
     private String proyecto;
