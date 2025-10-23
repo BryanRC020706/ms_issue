@@ -2,6 +2,7 @@ package com.jei.applicacion.service.Impl;
 
 import com.jei.applicacion.mapper.IssueMapper;
 import com.jei.applicacion.service.IssueService;
+import com.jei.dominio.entidad.Departamento;
 import com.jei.dominio.entidad.Issue;
 import com.jei.dominio.repository.IssueRepository;
 import com.jei.web.dto.IssueResponseDto;
@@ -30,5 +31,13 @@ public class IssueServiceImpl implements IssueService {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Issue no encontrado con ID: " + id));
         return issueMapper.toDto(issue);
+    }
+
+    @Override
+    public List<IssueResponseDto> buscarPorDepartamento(Departamento departamento) {
+        return issueRepository.findByDepartamento(departamento)
+                .stream()
+                .map(issueMapper::toDto)
+                .toList();
     }
 }

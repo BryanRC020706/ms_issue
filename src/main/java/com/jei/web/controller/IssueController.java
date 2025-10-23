@@ -1,13 +1,11 @@
 package com.jei.web.controller;
 
 import com.jei.applicacion.service.IssueService;
+import com.jei.dominio.entidad.Departamento;
 import com.jei.web.dto.IssueResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +17,13 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping
-    public ResponseEntity<List<IssueResponseDto>> buscar() {
-        List<IssueResponseDto> issues = issueService.buscar();
+    public ResponseEntity<List<IssueResponseDto>> buscar(@RequestParam(value = "departamento", required = false) Departamento departamento) {
+        List<IssueResponseDto> issues;
+        if (departamento != null) {
+            issues = issueService.buscarPorDepartamento(departamento);
+        } else {
+            issues = issueService.buscar();
+        }
         return ResponseEntity.ok(issues);
     }
 
