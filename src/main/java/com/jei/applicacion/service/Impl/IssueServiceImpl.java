@@ -3,6 +3,7 @@ package com.jei.applicacion.service.Impl;
 import com.jei.applicacion.mapper.IssueMapper;
 import com.jei.applicacion.service.IssueService;
 import com.jei.dominio.entidad.Departamento;
+import com.jei.dominio.entidad.Estado;
 import com.jei.dominio.entidad.Issue;
 import com.jei.dominio.repository.IssueRepository;
 import com.jei.web.dto.IssueResponseDto;
@@ -34,10 +35,11 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public List<IssueResponseDto> buscarPorDepartamento(Departamento departamento) {
-        return issueRepository.findByDepartamento(departamento)
+    public List<IssueResponseDto> buscarPorDepartamentoYEstado(Departamento departamento, Estado estado) {
+        return issueRepository.findByDepartamentoAndEstado(departamento, estado)
                 .stream()
                 .map(issueMapper::toDto)
                 .toList();
     }
+
 }
