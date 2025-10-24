@@ -1,5 +1,7 @@
 package com.jei.web.dto;
 
+import com.jei.applicacion.client.EpicaResponseDto;
+import com.jei.applicacion.client.ProyectoResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +20,8 @@ public class IssueResponseDto {
     private String estado;
     private String departamento;
     private String tipo;
-    private String epicos;
+    private EpicaResponseDto epica;
     private String sprint;
-    private String proyecto;
+    private ProyectoResponseDto proyecto;
     private LocalDate fecha;
 }

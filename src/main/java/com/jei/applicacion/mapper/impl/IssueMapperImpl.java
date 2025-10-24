@@ -34,9 +34,7 @@ public class IssueMapperImpl implements IssueMapper {
                 .estado(issue.getEstado().name())
                 .tipo(issue.getTipo().name())
                 .departamento(issue.getDepartamento().name())
-                .epicos(String.valueOf(issue.getEpicos()))
                 .sprint(issue.getSprint())
-                .proyecto(String.valueOf(issue.getProyecto()))
                 .fecha(issue.getFecha())
                 .build();
     }
