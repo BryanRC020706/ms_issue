@@ -12,14 +12,14 @@ public class IssueMapperImpl implements IssueMapper {
     public Issue toDomain(IssueRequestDto issueRequestDto) {
         return Issue.builder()
                 .nombre(issueRequestDto.getNombre())
-                .usuario(issueRequestDto.getUsuario())
+                .usuario(Long.valueOf(issueRequestDto.getUsuario()))
                 .prioridad(Prioridad.valueOf(issueRequestDto.getPrioridad()))
                 .estado(Estado.valueOf(issueRequestDto.getEstado()))
                 .tipo(Tipo.valueOf(issueRequestDto.getTipo()))
                 .departamento(Departamento.valueOf(issueRequestDto.getDepartamento()))
-                .epicos(issueRequestDto.getEpicos())
+                .epicos(Long.valueOf(issueRequestDto.getEpicos()))
                 .sprint(issueRequestDto.getSprint())
-                .proyecto(issueRequestDto.getProyecto())
+                .proyecto(Long.valueOf(issueRequestDto.getProyecto()))
                 .fecha(issueRequestDto.getFecha())
                 .build();
     }
@@ -29,14 +29,14 @@ public class IssueMapperImpl implements IssueMapper {
         return IssueResponseDto.builder()
                 .id(issue.getId())
                 .nombre(issue.getNombre())
-                .usuario(issue.getUsuario())
+                .usuario(String.valueOf(issue.getUsuario()))
                 .prioridad(issue.getPrioridad().name())
                 .estado(issue.getEstado().name())
                 .tipo(issue.getTipo().name())
                 .departamento(issue.getDepartamento().name())
-                .epicos(issue.getEpicos())
+                .epicos(String.valueOf(issue.getEpicos()))
                 .sprint(issue.getSprint())
-                .proyecto(issue.getProyecto())
+                .proyecto(String.valueOf(issue.getProyecto()))
                 .fecha(issue.getFecha())
                 .build();
     }

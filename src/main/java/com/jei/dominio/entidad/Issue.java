@@ -17,7 +17,7 @@ public class Issue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String usuario;
+    private Long usuario;
     @Enumerated(EnumType.STRING)
     private Prioridad prioridad;
     @Enumerated(EnumType.STRING)
@@ -26,8 +26,8 @@ public class Issue {
     private Tipo tipo;
     @Enumerated(EnumType.STRING)
     private Departamento departamento;
-    private String epicos;
+    private Long epicos;
     private String sprint;
-    private String proyecto;
+    private Long proyecto;
     private LocalDate fecha;
 }
