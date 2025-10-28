@@ -27,7 +27,7 @@ public class IssueController {
             issues = issueService.buscarPorDepartamentoYEstado(departamento, estado);
         }
         else {
-            issues = issueService.buscar();
+            issues = issueService.buscarPorDepartamento(departamento);
         }
 
         return ResponseEntity.ok(issues);

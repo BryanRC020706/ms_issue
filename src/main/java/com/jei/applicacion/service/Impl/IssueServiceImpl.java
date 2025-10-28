@@ -11,6 +11,7 @@ import com.jei.web.dto.IssueResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,9 +80,51 @@ public class IssueServiceImpl implements IssueService {
     public List<IssueResponseDto> buscarPorDepartamentoYEstado(Departamento departamento, Estado estado) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        String username = auth.getName();
-        String departament = (String) ((Map<?, ?>) auth.getDetails()).get("departamento");
-        return issueRepository.findByDepartamentoAndEstado(Departamento.valueOf(departament), estado)
+        @SuppressWarnings("unchecked")
+        Map<String, Object> details = (Map<String, Object>) auth.getDetails();
+        String userDepartamento = (String) details.get("departamento");
+        String userRole = (String) details.get("role");
+        Departamento departamentoFinal = "ADMIN".equalsIgnoreCase(userRole)
+                ? departamento
+                : Departamento.valueOf(userDepartamento);
+        return issueRepository.findByDepartamentoAndEstado(departamentoFinal, estado)
+                .stream()
+                .map(issue -> {
+                    IssueResponseDto dto = issueMapper.toDto(issue);
+                    if (issue.getEpicos() != null) {
+                        try {
+                            ProyectoResponseDto proyecto = proyectoClient.buscarPorId(issue.getProyecto());
+                            EpicaResponseDto epica = epicaClient.buscarPorId(issue.getEpicos());
+                            UsuarioResponseDto usuario = usuarioClient.buscarPorId(issue.getUsuario());
+                            dto.setEpica(epica);
+                            dto.setProyecto(proyecto);
+                            dto.setUsuario(usuario);
+                        } catch (Exception ignored) {}
+                    }
+                    return dto;
+                })
+                .toList();
+    }
+
+    @Override
+    public List<IssueResponseDto> buscarPorDepartamento(Departamento departamento) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String userRole = "ADMIN";
+        String userDepartamento = "COMERCIAL";
+
+        if (auth != null && auth.getPrincipal() != null) {
+            Object principal = auth.getPrincipal();
+            if (principal instanceof Jwt jwt) {
+                userRole = jwt.getClaimAsString("role");
+                userDepartamento = jwt.getClaimAsString("departamento");
+            }
+        }
+
+        Departamento departamentoFinal = "ADMIN".equalsIgnoreCase(userRole)
+                ? departamento
+                : Departamento.valueOf(userDepartamento);
+        return issueRepository.findByDepartamento(departamentoFinal)
                 .stream()
                 .map(issue -> {
                     IssueResponseDto dto = issueMapper.toDto(issue);

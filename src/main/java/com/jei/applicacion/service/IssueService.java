@@ -10,4 +10,5 @@ public interface IssueService {
     List<IssueResponseDto> buscar();
     IssueResponseDto buscarPorId(Long id);
     List<IssueResponseDto> buscarPorDepartamentoYEstado(Departamento departamento, Estado estado);
+    List<IssueResponseDto> buscarPorDepartamento(Departamento departamento);
 }
