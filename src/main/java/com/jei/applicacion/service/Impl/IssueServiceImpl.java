@@ -1,9 +1,6 @@
 package com.jei.applicacion.service.Impl;
 
-import com.jei.applicacion.client.EpicaClient;
-import com.jei.applicacion.client.EpicaResponseDto;
-import com.jei.applicacion.client.ProyectoClient;
-import com.jei.applicacion.client.ProyectoResponseDto;
+import com.jei.applicacion.client.*;
 import com.jei.applicacion.mapper.IssueMapper;
 import com.jei.applicacion.service.IssueService;
 import com.jei.dominio.entidad.Departamento;
@@ -12,9 +9,12 @@ import com.jei.dominio.entidad.Issue;
 import com.jei.dominio.repository.IssueRepository;
 import com.jei.web.dto.IssueResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +24,8 @@ public class IssueServiceImpl implements IssueService {
     private final IssueMapper issueMapper;
     private final ProyectoClient proyectoClient;
     private final EpicaClient epicaClient;
+    private final UsuarioClient usuarioClient;
+
 
     @Override
     public List<IssueResponseDto> buscar() {
@@ -36,7 +38,9 @@ public class IssueServiceImpl implements IssueService {
                         try {
                             EpicaResponseDto epica = epicaClient.buscarPorId(issue.getEpicos());
                             ProyectoResponseDto proyecto = proyectoClient.buscarPorId(issue.getProyecto());
+                            UsuarioResponseDto usuario = usuarioClient.buscarPorId(issue.getUsuario());
                             dto.setEpica(epica);
+                            dto.setUsuario(usuario);
                             dto.setProyecto(proyecto);
                         } catch (Exception e) {
                             System.out.println("no se encontro la epica con ID: " + issue.getEpicos());
@@ -59,7 +63,9 @@ public class IssueServiceImpl implements IssueService {
             try {
                 EpicaResponseDto epica = epicaClient.buscarPorId(issue.getEpicos());
                 ProyectoResponseDto proyecto = proyectoClient.buscarPorId(issue.getProyecto());
+                UsuarioResponseDto usuario = usuarioClient.buscarPorId(issue.getUsuario());
                 dto.setEpica(epica);
+                dto.setUsuario(usuario);
                 dto.setProyecto(proyecto);
             } catch (Exception e) {
                 System.out.println("no se encontro la epica con ID: " + issue.getEpicos());
@@ -71,7 +77,11 @@ public class IssueServiceImpl implements IssueService {
 
     @Override
     public List<IssueResponseDto> buscarPorDepartamentoYEstado(Departamento departamento, Estado estado) {
-        return issueRepository.findByDepartamentoAndEstado(departamento, estado)
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = auth.getName();
+        String departament = (String) ((Map<?, ?>) auth.getDetails()).get("departamento");
+        return issueRepository.findByDepartamentoAndEstado(Departamento.valueOf(departament), estado)
                 .stream()
                 .map(issue -> {
                     IssueResponseDto dto = issueMapper.toDto(issue);
@@ -79,8 +89,10 @@ public class IssueServiceImpl implements IssueService {
                         try {
                             ProyectoResponseDto proyecto = proyectoClient.buscarPorId(issue.getProyecto());
                             EpicaResponseDto epica = epicaClient.buscarPorId(issue.getEpicos());
+                            UsuarioResponseDto usuario = usuarioClient.buscarPorId(issue.getUsuario());
                             dto.setEpica(epica);
                             dto.setProyecto(proyecto);
+                            dto.setUsuario(usuario);
                         } catch (Exception ignored) {}
                     }
                     return dto;

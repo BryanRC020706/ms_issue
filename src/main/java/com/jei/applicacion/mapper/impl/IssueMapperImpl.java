@@ -29,7 +29,6 @@ public class IssueMapperImpl implements IssueMapper {
         return IssueResponseDto.builder()
                 .id(issue.getId())
                 .nombre(issue.getNombre())
-                .usuario(String.valueOf(issue.getUsuario()))
                 .prioridad(issue.getPrioridad().name())
                 .estado(issue.getEstado().name())
                 .tipo(issue.getTipo().name())
