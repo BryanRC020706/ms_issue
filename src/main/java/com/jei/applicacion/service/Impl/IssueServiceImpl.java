@@ -7,6 +7,7 @@ import com.jei.dominio.entidad.Departamento;
 import com.jei.dominio.entidad.Estado;
 import com.jei.dominio.entidad.Issue;
 import com.jei.dominio.repository.IssueRepository;
+import com.jei.web.dto.IssueRequestDto;
 import com.jei.web.dto.IssueResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -148,6 +149,64 @@ public class IssueServiceImpl implements IssueService {
                     return dto;
                 })
                 .toList();
+    }
+
+    @Override
+    public IssueResponseDto crear(IssueRequestDto issueRequest) {
+        Issue issue = issueMapper.toDomain(issueRequest);
+
+        Issue savedIssue = issueRepository.save(issue);
+
+        IssueResponseDto dto = issueMapper.toDto(savedIssue);
+
+        if (savedIssue.getEpicos() != null) {
+            try {
+                EpicaResponseDto epica = epicaClient.buscarPorId(savedIssue.getEpicos());
+                ProyectoResponseDto proyecto = proyectoClient.buscarPorId(savedIssue.getProyecto());
+                UsuarioResponseDto usuario = usuarioClient.buscarPorId(savedIssue.getUsuario());
+                dto.setEpica(epica);
+                dto.setProyecto(proyecto);
+                dto.setUsuario(usuario);
+            } catch (Exception e) {
+                System.out.println("No se encontró la épica o proyecto para el issue creado");
+            }
+        }
+
+        return dto;
+    }
+
+    @Override
+    public IssueResponseDto editar(Long id, IssueRequestDto issueRequest) {
+        Issue existingIssue = issueRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró issue con ID: " + id));
+
+        Issue updatedData = issueMapper.toDomain(issueRequest);
+        existingIssue.setNombre(updatedData.getNombre());
+        existingIssue.setUsuario(updatedData.getUsuario());
+        existingIssue.setPrioridad(updatedData.getPrioridad());
+        existingIssue.setEstado(updatedData.getEstado());
+        existingIssue.setTipo(updatedData.getTipo());
+        existingIssue.setDepartamento(updatedData.getDepartamento());
+        existingIssue.setEpicos(updatedData.getEpicos());
+        existingIssue.setSprint(updatedData.getSprint());
+        existingIssue.setProyecto(updatedData.getProyecto());
+        existingIssue.setFecha(updatedData.getFecha());
+
+        Issue updatedIssue = issueRepository.save(existingIssue);
+
+        IssueResponseDto dto = issueMapper.toDto(updatedIssue);
+
+        if (updatedIssue.getEpicos() != null) {
+            try {
+                dto.setEpica(epicaClient.buscarPorId(updatedIssue.getEpicos()));
+                dto.setProyecto(proyectoClient.buscarPorId(updatedIssue.getProyecto()));
+                dto.setUsuario(usuarioClient.buscarPorId(updatedIssue.getUsuario()));
+            } catch (Exception e) {
+                System.out.println("No se encontró la épica o proyecto para el issue editado");
+            }
+        }
+
+        return dto;
     }
 
 }

@@ -12,14 +12,14 @@ public class IssueMapperImpl implements IssueMapper {
     public Issue toDomain(IssueRequestDto issueRequestDto) {
         return Issue.builder()
                 .nombre(issueRequestDto.getNombre())
-                .usuario(Long.valueOf(issueRequestDto.getUsuario()))
+                .usuario(issueRequestDto.getUsuario())
                 .prioridad(Prioridad.valueOf(issueRequestDto.getPrioridad()))
                 .estado(Estado.valueOf(issueRequestDto.getEstado()))
                 .tipo(Tipo.valueOf(issueRequestDto.getTipo()))
                 .departamento(Departamento.valueOf(issueRequestDto.getDepartamento()))
-                .epicos(Long.valueOf(issueRequestDto.getEpicos()))
+                .epicos(issueRequestDto.getEpicos())
                 .sprint(issueRequestDto.getSprint())
-                .proyecto(Long.valueOf(issueRequestDto.getProyecto()))
+                .proyecto(issueRequestDto.getProyecto())
                 .fecha(issueRequestDto.getFecha())
                 .build();
     }

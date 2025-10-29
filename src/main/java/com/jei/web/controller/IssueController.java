@@ -3,8 +3,10 @@ package com.jei.web.controller;
 import com.jei.applicacion.service.IssueService;
 import com.jei.dominio.entidad.Departamento;
 import com.jei.dominio.entidad.Estado;
+import com.jei.web.dto.IssueRequestDto;
 import com.jei.web.dto.IssueResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +39,18 @@ public class IssueController {
     public ResponseEntity<IssueResponseDto> buscarPorId(@PathVariable Long id) {
         IssueResponseDto issue = issueService.buscarPorId(id);
         return ResponseEntity.ok(issue);
+    }
+    @PostMapping
+    public ResponseEntity<IssueResponseDto> crear(@RequestBody IssueRequestDto issueRequest) {
+        IssueResponseDto creado = issueService.crear(issueRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    }
+
+    // Editar un issue existente
+    @PutMapping("/{id}")
+    public ResponseEntity<IssueResponseDto> editar(@PathVariable Long id,
+                                                   @RequestBody IssueRequestDto issueRequest) {
+        IssueResponseDto actualizado = issueService.editar(id, issueRequest);
+        return ResponseEntity.ok(actualizado);
     }
 }

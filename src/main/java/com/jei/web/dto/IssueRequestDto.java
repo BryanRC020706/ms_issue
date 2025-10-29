@@ -13,13 +13,13 @@ import java.time.LocalDate;
 @Builder
 public class IssueRequestDto {
     private String nombre;
-    private String usuario;
+    private Long usuario;
     private String prioridad;
     private String estado;
     private String tipo;
     private String departamento;
     private Long epicos;
     private String sprint;
-    private String proyecto;
+    private Long proyecto;
     private LocalDate fecha;
 }
